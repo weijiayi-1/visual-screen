@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>各城市房源对比</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts-gl/2.0.9/echarts-gl.min.js"></script>
+    <script>
+    // 注册广西地图geojson，确保map3d刷新后可用
+    window.guangxiGeoJson = null;
+    fetch('https://geo.datav.aliyun.com/areas_v3/bound/450000_full.json')
+      .then(res => res.json())
+      .then(geoJson => {
+        window.guangxiGeoJson = geoJson;
+        echarts.registerMap('广西', geoJson);
+      });
+    </script>
+    <style>
+        .charts-flex {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+        }
+        .charts-left {
+            display: flex;
+            flex-direction: column;
+        }
+        .charts-right {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+            /* flex: 1; 移除，让宽度由内容决定 */
+        }
+        .charts-right-top {
+            display: flex;
+            flex-direction: row;
+        }
+        #city-chart1, #city-chart2 {
+            margin-bottom: 0;
+        }
+        #city-chart2 {
+            margin-top: 0;
+        }
+        #city-map3d {
+            margin: 0 20px;
+        }
+        #radar-chart {
+            margin-right: 10px;
+        }
+        #wordcloud-chart {
+            margin-top: 10px;
+        }
+        .charts-bottom-line {
+            margin-top: 20px;
+            width: 100%;
+        }
+        #line-chart {
+            width: 100%;
+            height: 400px;
+            min-width: 300px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .charts-bottom-bar3d {
+            margin-top: 20px;
+            width: 100%;
+        }
+        #bar3d-map-chart {
+           
+            width: 100%;
+            max-width: 700px;
+            height: 400px;
+            min-width: 300px;
+            margin-right: 20px;
+        }
+        .charts-bottom {
+            display: flex;
+            flex-direction: row;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .charts-bottom > div {
+            flex: 1 1 0;
+            min-width: 300px;
+            height: 400px;
+        }
+        #bar3d-map-chart {
+            margin-right: 20px;
+        }
+        #line-chart {
+            
+            margin-right: 0;
+        }
+        .charts-bottom-line, .charts-bottom-bar3d {
+            display: none;
+        }
+        .charts-bottom > div:first-child {
+            flex: 1.3 1 0;
+            min-width: 300px;
+            height: 400px;
+            margin-right: 20px;
+        }
+        .charts-bottom > div:last-child {
+            flex: 0.7 1 0;
+            min-width: 300px;
+            height: 400px;
+            margin-right: 0;
+        }
+        .tech-title {
+            margin-bottom: 30px;
+            position: relative;
+            left: -90px;
+            font-size: 2.6rem;
+            font-family: 'Segoe UI', 'Arial', 'sans-serif';
+            background: linear-gradient(90deg, #00ffe7 10%, #3a8dde 50%, #0fffc1 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            text-shadow: 0 0 12px #00ffe7, 0 0 24px #3a8dde, 0 0 32px #0fffc1;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            color: #e0e6ed;
+            font-family: 'Segoe UI', 'Arial', 'sans-serif';
+        }
+        .container {
+            background: rgba(20, 30, 48, 0.85);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            padding: 32px 24px;
+            margin-top: 32px;
+            max-width: 1700px;
+        }
+        #city-chart1 {
+            border: 2px solid #00ffe7;
+            border-radius: 16px;
+            box-shadow: 0 0 16px #00ffe744, 0 0 32px #3a8dde33;
+            padding: 12px 8px;
+            background: rgba(10, 20, 40, 0.5);
+        }
+        #city-chart1,
+        #city-chart2,
+        #city-map3d,
+        #radar-chart,
+        #pie-chart,
+        #wordcloud-chart,
+        #bar3d-map-chart,
+        #line-chart {
+            border: 2px solid #00ffe7;
+            border-radius: 16px;
+            box-shadow: 0 0 16px #00ffe744, 0 0 32px #3a8dde33;
+            padding: 12px 8px;
+            background: rgba(10, 20, 40, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="title-map3d-align" style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%;">
+            <h1 class="tech-title">二手房分析可视化大屏</h1>
+        </div>
+        <div class="charts-flex">
+            <div class="charts-left">
+                <div id="city-chart1">{{ chart_html1|safe }}</div>
+                <div id="city-chart2">{{ chart_html2|safe }}</div>
+            </div>
+            <div id="city-map3d">{{ chart_html3|safe }}</div>
+            <div class="charts-right">
+                <div class="charts-right-top">
+                    <div id="radar-chart">{{ radar_html|safe }}</div>
+                    <div id="pie-chart">{{ pie_html|safe }}</div>
+                </div>
+                <div id="wordcloud-chart">{{ wordcloud_html|safe }}</div>
+            </div>
+        </div>
+        <!-- 下方：3D柱状图和折线图并排 -->
+        <div class="charts-bottom">
+            <div id="bar3d-map-chart">{{ bar3d_map_html|safe }}</div>
+            <div id="line-chart">{{ line_html|safe }}</div>
+        </div>
+    </div>
+    <script>
+    function executeScripts(container) {
+        const scripts = container.getElementsByTagName('script');
+        for (let i = 0; i < scripts.length; i++) {
+            const newScript = document.createElement('script');
+            if (scripts[i].src) {
+                newScript.src = scripts[i].src;
+            } else {
+                newScript.text = scripts[i].text;
+            }
+            document.body.appendChild(newScript);
+        }
+    }
+    // 移除自动刷新和updateCityData相关代码
+    </script>
+</body>
+</html> 
