@@ -29,9 +29,10 @@
 - **高性能数据处理**：后端用 Pandas 高效处理大数据量，保证页面响应速度。
 - **接口化设计**：支持前后端分离和异步数据加载，便于后续扩展。
 
-> **效果截图**（请在实际博客中插入项目运行截图）：
+> **效果截图**
 >
-> ![大屏首页效果图](./screenshot_dashboard.png)
+<img width="1069" height="765" alt="image" src="https://github.com/user-attachments/assets/788d8d17-215f-4c2d-8f32-111bb2288bad" />
+
 
 ---
 
