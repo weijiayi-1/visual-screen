@@ -1,0 +1,5 @@
+django
+pandas
+pyecharts
+pymysql
+jieba 
